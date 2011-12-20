@@ -27,10 +27,10 @@ begin
     s.name = "apn_on_mongoid"
     s.version = APN::VERSION.dup
     s.summary = "Apple Push Notification delivery powered by Mongoid"
-    s.email = "alex+apn_on_mongoid@alexeckermann.com"
-    s.homepage = "http://github.com/alex/apn_on_mongoid"
+    s.email = "olivier@kasual.biz"
+    s.homepage = "http://github.com/o-bo/apn_on_mongoid"
     s.description = "Apple Push Notification delivery powered by Mongoid"
-    s.authors = ['Alex Eckermann', 'all the APN on Rails contributors']
+    s.authors = ['Olivier', 'Alex Eckermann', 'all the APN on Rails contributors']
     s.files =  root_files + FileList["{lib}/**/*"]
     s.extra_rdoc_files = root_files
     s.add_dependency("mongoid", ">= 2.0.0")
