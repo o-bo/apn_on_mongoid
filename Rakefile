@@ -33,7 +33,7 @@ begin
     s.authors = ['Alex Eckermann', 'all the APN on Rails contributors']
     s.files =  root_files + FileList["{lib}/**/*"]
     s.extra_rdoc_files = root_files
-    s.add_dependency("mongoid", "~> 2.0.0.beta.17")
+    s.add_dependency("mongoid", ">= 2.0.0")
   end
 
   Jeweler::GemcutterTasks.new
