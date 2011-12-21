@@ -12,24 +12,10 @@ module APN
     field :sent_at, :type => Time
     field :device_language
     field :errors_nb
-
-    referenced_in :subscription, :class_name => "APN::Subscription"
     
+    embedded_in :device, :class_name => 'APN::Device'
     before_save :truncate_alert
     
-    # Returns the device from the subscription association
-    def device
-      self.subscription.device
-    end
-    
-    # Gets the subscription which is embedded in the device collection.
-    #
-    # This will have to do until Mongoid implements a better search for
-    # embeded items.
-    def subscription
-      device = APN::Device.where(:subscriptions => {'$elemMatch' => { :_id => self.subscription_id }}).first
-      device.subscriptions.where(:_id => self.subscription_id).first
-    end
     
     # Stores the text alert message you want to send to the device.
     # 
@@ -81,7 +67,7 @@ module APN
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
-      "\0\0 #{self.subscription.to_hexa}\0#{(json.length).chr}#{json}"
+      "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
     end
     
     # Deliver the current notification

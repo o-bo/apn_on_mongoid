@@ -1,5 +1,10 @@
 h1. WARNING VERY ALPHA
 
+DO NOT USE !
+
+TESTS ARE IN PROGRESS...
+
+
 This is the first build of the gem. Use in production at your own imminent -devise- demise. The gem will successfully send a notification to a device with no worries. However this is only with basic testing and no real production use tests.
 
 h1. APN on Mongoid (Apple Push Notifications on Mongoid)
@@ -69,14 +74,12 @@ h2. Example
 
 <pre><code>
   $ rails console
-  >> d = APN::Device.create(:udid => "1a2b3c4d")
-  >> a = APN::Application.create(:name => "MyApp", :identififer => "com.acmeinc.myapp")
-  >> s = d.subscriptions.create(:application => a, :token => "XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX")
+  >> device = APN::Device.create(:token => "XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX")
   >> n = APN::Notification.new
   >> n.device = d
   >> n.alert = "G'day from APN on Mongoid"
   >> n.sound = "default"
-  >> n.badge = 1337
+  >> n.badge = 5
   >> n.save
   >> n.deliver
   ... or ...
@@ -84,12 +87,8 @@ h2. Example
 </code></pre>
 
 The schema is created like so:
-* A device has many subscriptions
-** A subscription is embedded in a device
-* A subscription references an application
-* A notification references a subscription
-
-It is done this way so you can have a registry of devices that can be assigned to multiple applications. This is handy for developers that do have more than one app that uses the APNS and want to use 1 Rails application to control notifications.
+* A device embedds many notifications
+** A notification is embedded in a device
 
 For doing once off notifications it is more work than APN on Rails but it is assumed that this gem will be used for services that require Push Notifications delivered regularly and to a large device base.
 
