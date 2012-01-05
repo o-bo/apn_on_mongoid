@@ -8,6 +8,7 @@ module APN
     embedded_in :device_owner, :class_name => 'APN::DeviceOwner'
     
     field :token
+    field :last_registered_at, type: Date
 
     validates_uniqueness_of :token
     validates_format_of :token, :with => /^[a-z0-9]{8}\s[a-z0-9]{8}\s[a-z0-9]{8}\s[a-z0-9]{8}\s[a-z0-9]{8}\s[a-z0-9]{8}\s[a-z0-9]{8}\s[a-z0-9]{8}$/
