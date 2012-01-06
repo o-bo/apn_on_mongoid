@@ -13,7 +13,7 @@ module APN
     field :device_language
     field :errors_nb
     
-    has_and_belongs_to_many :devices, :class_name => 'APN::Device'
+    belongs_to :device, :class_name => 'APN::Device'
     before_save :truncate_alert
     
     
@@ -102,7 +102,6 @@ module APN
     # As each APN::Notification is sent the <tt>sent_at</tt> column will be timestamped,
     # so as to not be sent again.
     #
-
     def self.deliver(notifications = APN::Notification.all(:conditions => {:sent_at => nil}))
       unless notifications.nil? || notifications.empty?
 
