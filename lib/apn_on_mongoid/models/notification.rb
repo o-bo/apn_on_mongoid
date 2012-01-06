@@ -86,9 +86,7 @@ module APN
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
-      m = "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
-      puts "DEBUG APN MESSAGE = #{m}"
-      m
+      "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
     end
     
     # Deliver the current notification
@@ -128,7 +126,9 @@ module APN
 
         APN::Connection.open_for_delivery do |conn, sock|
           notifications.each do |noty|
-            conn.write(noty.message_for_sending)
+            m = noty.message_for_sending
+            puts "APN MESSAGE : #{m}"
+            conn.write(m)
             noty.sent_at = Time.now
             noty.save
           end
