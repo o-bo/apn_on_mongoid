@@ -4,7 +4,7 @@ module APN
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    embeds_many :notifications, :class_name => 'APN::Notification'
+    has_and_belongs_to_many :notifications, :class_name => 'APN::Notification'
     embedded_in :device_owner, :class_name => 'APN::DeviceOwner'
     
     field :token

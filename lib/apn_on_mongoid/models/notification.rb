@@ -13,7 +13,7 @@ module APN
     field :device_language
     field :errors_nb
     
-    embedded_in :device, :class_name => 'APN::Device'
+    has_and_belongs_to_many :devices, :class_name => 'APN::Device'
     before_save :truncate_alert
     
     
