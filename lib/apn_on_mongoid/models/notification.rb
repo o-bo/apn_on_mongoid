@@ -84,8 +84,10 @@ module APN
     # see http://developer.apple.com/IPhone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW4
     def message_for_sending
       json = self.to_apple_json
+      puts "APN MESSAGE APPLE JSON: #{json}"
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
+      puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
       "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
     end
     
@@ -127,7 +129,6 @@ module APN
         APN::Connection.open_for_delivery do |conn, sock|
           notifications.each do |noty|
             m = noty.message_for_sending
-            puts "APN MESSAGE : #{m}"
             conn.write(m)
             noty.sent_at = Time.now
             noty.save
