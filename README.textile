@@ -29,12 +29,12 @@ and the apple certificate as p12 files. Here is a quick walkthrough on how to do
 
 Now covert the p12 file to a pem file:
 <pre><code>
-  $ openssl pkcs12 -in cert.p12 -out apns_certificate_production.pem -nodes -clcerts
+  $ openssl pkcs12 -in cert.p12 -out apple_push_notification_production.pem -nodes -clcerts
 </code></pre>
 
-Put 'apns_certificate_production.pem' in config/
+Put 'apple_push_notification_production.pem' in config/
 
-If you are using a development certificate, then change the name to apns_certificate_development.pem instead.
+If you are using a development certificate, then change the name to apple_push_notification_development.pem instead.
 
 h2. Installing:
 
