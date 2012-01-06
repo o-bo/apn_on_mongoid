@@ -16,6 +16,25 @@ module APN
     belongs_to :device, :class_name => 'APN::Device'
     before_save :truncate_alert
     
+    # Create a notification with the given parameters.
+    #
+    # * Args* :
+    #   - device -> the device that shall be notified ; mandatory.
+    #   - alert -> the alert to be displayed to the user ; mandatory.
+    #   - sound -> the sound to play in the device ; optional.
+    #   - badge -> the number to be display as a badge on the device ; optional. 
+    # * *Returns* :
+    #   - the created notification
+    #
+    def self.create_notification(device, alert, sound="default", badge=0)
+      n = APN::Notification.new
+      n.device = device
+      n.alert = alert
+      n.sound = sound
+      n.badge = badge
+      n.save
+      n
+    end
     
     # Stores the text alert message you want to send to the device.
     # 
