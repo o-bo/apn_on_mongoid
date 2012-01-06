@@ -26,7 +26,7 @@ module APN
     # * *Returns* :
     #   - the created notification
     #
-    def self.create_notification(device, alert, sound="default", badge=0)
+    def self.create_notification(device, alert, sound="default", badge=1)
       n = APN::Notification.new
       n.device = device
       n.alert = alert
@@ -86,7 +86,7 @@ module APN
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
-      "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      "\0\0 #{self.device.token.to_hexa}\0#{(json.length).chr}#{json}"
     end
     
     # Deliver the current notification
