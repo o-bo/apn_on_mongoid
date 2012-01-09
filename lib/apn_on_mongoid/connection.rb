@@ -29,7 +29,7 @@ module APN
         cert = File.read(options[:cert])
         if cert
           ctx = OpenSSL::SSL::SSLContext.new
-          ctx.key = OpenSSL::PKey::RSA.new(cert, options[:passphrase])
+          ctx.key = OpenSSL::PKey::RSA.new(cert, '')#options[:passphrase])
           ctx.cert = OpenSSL::X509::Certificate.new(cert)
   
           # sock = TCPSocket.new(options[:host], options[:port])
