@@ -109,15 +109,16 @@ module APN
         self.save
         puts "NOTIFICATION #{self.alert} WAS SENT AT #{self.sent_at}"
       end
+    end
       
-      def self.test_deliver
-        APN::Connection.open_for_delivery do |conn, sock|
-          payload = {"aps" => {"alert" => "Oh hai!", "badge" => 1, "sound" => 'default'}}
-          json = payload.to_json()
-          token =  ["2c5ee1144d1bccb22266f8c8d7f62e69f7d1269f2e917286c4009a1dd2e8f8f2".delete(' ')].pack('H*') #something like 2c0cad 01d1465 346786a9 3a07613f2 b03f0b94b6 8dde3993 d9017224 ad068d36
-          apnsMessage = "\0\0 #{token}\0#{json.length.chr}#{json}"
-          conn.write(apnsMessage)
-        end
+    def self.test_deliver
+      APN::Connection.open_for_delivery do |conn, sock|
+        payload = {"aps" => {"alert" => "Oh hai!", "badge" => 1, "sound" => 'default'}}
+        json = payload.to_json()
+        token =  ["2c5ee1144d1bccb22266f8c8d7f62e69f7d1269f2e917286c4009a1dd2e8f8f2".delete(' ')].pack('H*') #something like 2c0cad 01d1465 346786a9 3a07613f2 b03f0b94b6 8dde3993 d9017224 ad068d36
+        apnsMessage = "\0\0 #{token}\0#{json.length.chr}#{json}"
+        conn.write(apnsMessage)
+      end
     end
 
     # private
