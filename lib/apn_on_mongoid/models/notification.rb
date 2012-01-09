@@ -87,9 +87,15 @@ module APN
       puts "APN MESSAGE APPLE JSON: #{json}"
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
-      puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
-      puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
-      "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      #jsonString = payload.to_json => json
+      length = json.length
+      a= [1, 66, 0, 32, @args[0], length, json]
+      data = a.pack("cNNnH*na*")
+      puts "Sending: #{data} With format array #{a.inspect} END"
+      data     
+      #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
+      #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      #{}"\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
     end
     
     # Deliver the current notification
