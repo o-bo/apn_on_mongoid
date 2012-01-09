@@ -28,7 +28,6 @@ module APN
                    :port => ::APN.port}.merge(options)
         cert = File.read(options[:cert])
         if cert
-          puts "CERTIFICATE #{cert.to_s}"
           ctx = OpenSSL::SSL::SSLContext.new
           ctx.key = OpenSSL::PKey::RSA.new(cert, options[:passphrase])
           ctx.cert = OpenSSL::X509::Certificate.new(cert)
@@ -42,8 +41,6 @@ module APN
   
           ssl.close
           sock.close
-        else
-          puts "NO CERTIFICATE"
         end
       end
       
