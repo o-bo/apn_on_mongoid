@@ -95,8 +95,8 @@ module APN
       #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
       #{}"\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
       token = self.device.to_hexa
-      puts "HEXA TOKEN #{token.unpack('H*')}"
-      puts "PAYLOAD #{json}"
+      puts "HEXA TOKEN : #{token.unpack('H*')}"
+      puts "PAYLOAD : #{json}"
       [0, 0, token.size, token, 0, json.size, json].pack("ccca*cca*")
     end
     
