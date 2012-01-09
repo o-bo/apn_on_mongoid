@@ -84,14 +84,12 @@ module APN
     # see http://developer.apple.com/IPhone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW4
     def message_for_sending
       json = self.to_apple_json
-      puts "APN MESSAGE APPLE JSON: #{json}"
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
       #jsonString = payload.to_json => json
       length = json.length
       a= [1, 66, 0, 32, self.device.get_token, length, json]
       data = a.pack("cNNnH*na*")
-      puts "Sending: #{a} With format array #{a.inspect} END"
       data     
       #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
       #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
