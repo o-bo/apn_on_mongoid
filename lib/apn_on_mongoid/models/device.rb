@@ -39,10 +39,6 @@ module APN
     def to_hexa
       [self.token.delete(' ')].pack('H*')
     end
-    
-    def to_hexa2
-      self.token.delete(' ').scan(/[0-9a-f][0-9a-f]/).map {|s| s.hex.chr}.join
-    end
 
     private
       def set_last_registered_at

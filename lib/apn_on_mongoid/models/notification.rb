@@ -14,7 +14,7 @@ module APN
     field :errors_nb
     
     belongs_to :device, :class_name => 'APN::Device'
-    #before_save :truncate_alert
+    before_save :truncate_alert
     
     # Create a notification with the given parameters.
     #
@@ -85,84 +85,66 @@ module APN
     def message_for_sending
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
-
-      #jsonString = payload.to_json => json
-      #length = json.length
-      #a= [1, 66, 0, 32, self.device.get_token, length, json]
-      #data = a.pack("cNNnH*na*")
-      #data     
-      #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
-      #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
-      #{}"\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      
       token = self.device.to_hexa
-      puts "HEXA TOKEN : #{token.unpack('H*')}"
-      puts "PAYLOAD : #{json}"
-      [0, 0, token.size, token, 0, json.size, json].pack("ccca*cca*")
+      "\0\0 #{token}\0#{json.length.chr}#{json}"
     end
     
     # Deliver the current notification
     def deliver
-      APN::Connection.open_for_delivery do |conn, sock|
-        m = self.message_for_sending
-        conn.write(m)
-        self.sent_at = Time.now
-        self.save
-        puts "NOTIFICATION #{self.alert} WAS SENT AT #{self.sent_at}"
-      end
+      APN::Notifications::deliver([self])
     end
-      
-    def self.test_deliver
-      APN::Connection.open_for_delivery do |conn, sock|
-        payload = {"aps" => {"alert" => "Oh hai!", "badge" => 1, "sound" => 'default'}}
-        json = payload.to_json()
-        token =  ["2c5ee1144d1bccb22266f8c8d7f62e69f7d1269f2e917286c4009a1dd2e8f8f2".delete(' ')].pack('H*') #something like 2c0cad 01d1465 346786a9 3a07613f2 b03f0b94b6 8dde3993 d9017224 ad068d36
-        apnsMessage = "\0\0 #{token}\0#{json.length.chr}#{json}"
-        conn.write(apnsMessage)
-      end
-    end
+        #   
+        # def self.test_deliver
+        #   APN::Connection.open_for_delivery do |conn, sock|
+        #     payload = {"aps" => {"alert" => "Oh hai!", "badge" => 1, "sound" => 'default'}}
+        #     json = payload.to_json()
+        #     token =  ["2c5ee1144d1bccb22266f8c8d7f62e69f7d1269f2e917286c4009a1dd2e8f8f2".delete(' ')].pack('H*')
+        #     apnsMessage = "\0\0 #{token}\0#{json.length.chr}#{json}"
+        #     conn.write(apnsMessage)
+        #   end
+        # end
 
-    # private
-    #     # Truncate alert message if message payload will be too long
-    #     def truncate_alert
-    #       return unless self.alert
-    #       while self.alert.length > 1
-    #         begin
-    #           self.message_for_sending
-    #           break
-    #         rescue APN::Errors::ExceededMessageSizeError => e
-    #           self.alert = truncate(self.alert, :length => self.alert.mb_chars.length - 1)
-    #         end
-    #       end
-    #     end
+    private
+    
+    # Truncate alert message if message payload will be too long
+    def truncate_alert
+      return unless self.alert
+      
+      while self.alert.length > 1
+        begin
+          self.message_for_sending
+        break
+        rescue APN::Errors::ExceededMessageSizeError => e
+          self.alert = truncate(self.alert, :length => self.alert.mb_chars.length - 1)
+        end
+      end
+    end
+    
   end
-   #  
-   # class Notifications
-   #   
-   #   # Opens a connection to the Apple APN server and attempts to batch deliver
-   #   # an Array of notifications.
-   #   # 
-   #   # This method expects an Array of APN::Notifications. If no parameter is passed
-   #   # in then it will use the following:
-   #   #   APN::Notification.all(:conditions => {:sent_at => nil})
-   #   # 
-   #   # As each APN::Notification is sent the <tt>sent_at</tt> column will be timestamped,
-   #   # so as to not be sent again.
-   #   #
-   #   def self.deliver(notifications = APN::Notification.all(:conditions => {:sent_at => nil}))
-   #     unless notifications.nil? || notifications.empty?
-   # 
-   #       APN::Connection.open_for_delivery do |conn, sock|
-   #         notifications.each do |noty|
-   #           m = noty.message_for_sending
-   #           conn.write(m)
-   #           noty.sent_at = Time.now
-   #           noty.save
-   #         end
-   #       end
-   # 
-   #     end
-   #   end
-   #   
-   # end
+    
+   class Notifications 
+     # Opens a connection to the Apple APN server and attempts to batch deliver
+     # an Array of notifications.
+     # 
+     # This method expects an Array of APN::Notifications. If no parameter is passed
+     # in then it will use the following:
+     #   APN::Notification.all(:conditions => {:sent_at => nil})
+     # 
+     # As each APN::Notification is sent the <tt>sent_at</tt> column will be timestamped,
+     # so as to not be sent again.
+     #
+     def self.deliver(notifications = APN::Notification.all(:conditions => {:sent_at => nil}))
+       unless notifications.nil? || notifications.empty?
+         APN::Connection.open_for_delivery do |conn, sock|
+           notifications.each do |noty|
+             conn.write(noty.message_for_sending)
+             self.sent_at = Time.now
+             self.save
+           end
+         end
+       end
+     end
+   end
   
 end
