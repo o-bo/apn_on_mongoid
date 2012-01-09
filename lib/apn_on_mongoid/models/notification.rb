@@ -94,7 +94,7 @@ module APN
       #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
       #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
       #{}"\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
-      token = self.device.get_token
+      token = self.device.to_hexa
       puts "HEXA TOKEN #{token.unpack('H*')}"
       [0, 0, token.size, token, 0, json.size, json].pack("ccca*cca*")
     end
