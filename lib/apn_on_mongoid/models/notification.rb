@@ -91,7 +91,7 @@ module APN
       length = json.length
       a= [1, 66, 0, 32, self.device.get_token, length, json]
       data = a.pack("cNNnH*na*")
-      puts "Sending: #{data} With format array #{a.inspect} END"
+      puts "Sending: #{a} With format array #{a.inspect} END"
       data     
       #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
       #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
