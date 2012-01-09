@@ -32,9 +32,8 @@ module APN
           ctx.key = OpenSSL::PKey::RSA.new(cert, options[:passphrase])
           ctx.cert = OpenSSL::X509::Certificate.new(cert)
   
-          sock = TCPSocket.new(options[:host], options[:port].to_i)
+          sock = TCPSocket.new(options[:host], options[:port])
           ssl = OpenSSL::SSL::SSLSocket.new(sock, ctx)
-          #ssl.sync = true
           ssl.connect
   
           yield ssl, sock if block_given?
