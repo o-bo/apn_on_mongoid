@@ -139,8 +139,8 @@ module APN
          APN::Connection.open_for_delivery do |conn, sock|
            notifications.each do |noty|
              conn.write(noty.message_for_sending)
-             self.sent_at = Time.now
-             self.save
+             conn.sent_at = Time.now
+             conn.save
            end
          end
        end
