@@ -102,7 +102,13 @@ module APN
     
     # Deliver the current notification
     def deliver
-      APN::Notifications.deliver([self])
+      APN::Connection.open_for_delivery do |conn, sock|
+        m = self.message_for_sending
+        conn.write(m)
+        self.sent_at = Time.now
+        self.save
+        puts "NOTIFICATION #{self.alert} WAS SENT AT #{self.sent_at}"
+      end
     end
 
     private
