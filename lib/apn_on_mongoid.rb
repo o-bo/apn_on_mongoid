@@ -1,6 +1,7 @@
 require 'active_support/dependencies'
 require 'socket'
 require 'openssl'
+require 'json'
 
 module APN # :nodoc:
   
