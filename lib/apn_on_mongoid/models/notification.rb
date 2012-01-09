@@ -104,9 +104,6 @@ module APN
     def deliver
       APN::Connection.open_for_delivery do |conn, sock|
         m = self.message_for_sending
-        rescue APN::Errors::ExceededMessageSizeError => e
-          return nil
-        end
         conn.write(m)
         self.sent_at = Time.now
         self.save
