@@ -89,7 +89,7 @@ module APN
 
       #jsonString = payload.to_json => json
       length = json.length
-      a= [1, 66, 0, 32, @args[0], length, json]
+      a= [1, 66, 0, 32, self.device.get_token, length, json]
       data = a.pack("cNNnH*na*")
       puts "Sending: #{data} With format array #{a.inspect} END"
       data     

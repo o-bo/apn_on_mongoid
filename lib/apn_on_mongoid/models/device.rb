@@ -39,6 +39,10 @@ module APN
     def to_hexa
       [self.token.delete(' ')].pack('H*')
     end
+    
+    def get_token
+      self.token.delete(' ')
+    end
 
     private
       def set_last_registered_at
