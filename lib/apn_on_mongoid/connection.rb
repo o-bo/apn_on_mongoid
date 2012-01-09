@@ -32,7 +32,8 @@ module APN
           ctx.key = OpenSSL::PKey::RSA.new(cert, options[:passphrase])
           ctx.cert = OpenSSL::X509::Certificate.new(cert)
   
-          sock = TCPSocket.new(options[:host], options[:port])
+          # sock = TCPSocket.new(options[:host], options[:port])
+          sock = TCPSocket.new('gateway.sandbox.push.apple.com', 2195)
           ssl = OpenSSL::SSL::SSLSocket.new(sock, ctx)
           ssl.connect
   
