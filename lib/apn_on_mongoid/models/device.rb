@@ -41,7 +41,7 @@ module APN
     end
     
     def get_token
-      self.token.delete(' ')
+      self.token.delete(' ').scan(/[0-9a-f][0-9a-f]/).map {|s| s.hex.chr}.join
     end
 
     private

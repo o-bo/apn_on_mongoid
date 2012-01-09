@@ -91,9 +91,11 @@ module APN
       #a= [1, 66, 0, 32, self.device.get_token, length, json]
       #data = a.pack("cNNnH*na*")
       #data     
-      puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
-      puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
-      "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
+      #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      #{}"\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      token = self.device.get_token
+      [0, 0, token.size, token, 0, json.size, json].pack("ccca*cca*")
     end
     
     # Deliver the current notification
