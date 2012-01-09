@@ -87,13 +87,13 @@ module APN
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
       #jsonString = payload.to_json => json
-      length = json.length
-      a= [1, 66, 0, 32, self.device.get_token, length, json]
-      data = a.pack("cNNnH*na*")
-      data     
-      #puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
-      #puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
-      #{}"\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      #length = json.length
+      #a= [1, 66, 0, 32, self.device.get_token, length, json]
+      #data = a.pack("cNNnH*na*")
+      #data     
+      puts "APN MESSAGE DEVICE HEXA: #{self.device.to_hexa}"
+      puts "RESULT : \0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
+      "\0\0 #{self.device.to_hexa}\0#{(json.length).chr}#{json}"
     end
     
     # Deliver the current notification
