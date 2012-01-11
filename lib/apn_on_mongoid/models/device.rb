@@ -5,7 +5,7 @@ module APN
     include Mongoid::Timestamps
 
     has_many :notifications, :class_name => 'APN::Notification'
-    belongs_to :device_owner, :class_name => 'APN::DeviceOwner'
+    embedded_in :device_owner, :class_name => 'APN::DeviceOwner'
     
     field :token
     field :last_registered_at, type: Date
