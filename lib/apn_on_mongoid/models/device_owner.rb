@@ -4,10 +4,6 @@ module APN
     
     included do
       embeds_many :devices, :class_name => 'APN::Device'
-      
-      def self.owners
-        owners = APN::DeviceOwner.all
-      end
     end
     
     module InstanceMethods

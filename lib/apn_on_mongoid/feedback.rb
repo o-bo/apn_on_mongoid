@@ -17,7 +17,8 @@ module APN
       # This can be run from the following Rake task:
       #   $ rake apn:feedback:process
       def process_devices
-        APN::DeviceOwner.owners.each do |owner|
+        owners = APN::DeviceOwner.all
+        owners.each do |owner|
           owner.check_devices.each do |device|
             if device.last_registered_at < device.feedback_at
               device.destroy
