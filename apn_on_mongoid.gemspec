@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "apn_on_mongoid"
-  s.version = "0.0.48"
+  s.version = "0.0.49"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Olivier", "Alex Eckermann", "all the APN on Rails contributors"]
@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
     "README.textile",
     "lib/apn_on_mongoid.rb",
     "lib/apn_on_mongoid/connection.rb",
-    "lib/apn_on_mongoid/feedback.rb",
     "lib/apn_on_mongoid/models/device.rb",
     "lib/apn_on_mongoid/models/device_owner.rb",
     "lib/apn_on_mongoid/models/notification.rb",
