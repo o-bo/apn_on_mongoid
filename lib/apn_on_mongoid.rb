@@ -49,7 +49,6 @@ module APN # :nodoc:
 end # APN
 
 require 'apn_on_mongoid/connection'
-require 'apn_on_mongoid/feedback'
 require 'apn_on_mongoid/models/device'
 require 'apn_on_mongoid/models/notification'
 require 'apn_on_mongoid/models/device_owner'
