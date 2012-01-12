@@ -26,7 +26,7 @@ module APN
     # * *Returns* :
     #   - the created notification
     #
-    def self.create_notification(device, alert, sound="default", badge=1)
+    def self.create_notification(device, alert, sound="default", badge=0)
       n = APN::Notification.new
       n.device = device
       n.alert = alert
