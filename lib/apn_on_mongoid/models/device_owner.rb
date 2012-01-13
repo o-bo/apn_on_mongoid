@@ -3,7 +3,7 @@ module APN
     extend ActiveSupport::Concern
     
     included do
-      has_many :devices, :class_name => 'APN::Device'
+      has_many :devices, :class_name => 'APN::Device', :inverse_of => :device_owner
     end
     
     module InstanceMethods
