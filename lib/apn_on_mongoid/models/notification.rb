@@ -12,8 +12,8 @@ module APN
     field :sent_at, :type => Time
     field :device_language
     field :errors_nb
+    field :device_token
     
-    belongs_to :device, :class_name => 'APN::Device'
     before_save :truncate_alert
     
     # Create a notification with the given parameters.
@@ -28,12 +28,25 @@ module APN
     #
     def self.create_notification(device, alert, sound="default", badge=0)
       n = APN::Notification.new
-      n.device = device
+      n.device_token = APN::Notification::store_token(device.token)
       n.alert = alert
       n.sound = sound
       n.badge = badge
       n.save
       n
+    end
+    
+    # Stores the token (Apple's device ID) of the iPhone (device).
+    # 
+    # If the token comes in like this:
+    #  '<5gxadhy6 6zmtxfl6 5zpbcxmw ez3w7ksf qscpr55t trknkzap 7yyt45sc g6jrw7qz>'
+    # Then the '<' and '>' will be stripped off.
+    def self.store_token(token)
+      res = token.scan(/\<(.+)\>/).first
+      unless res.nil? || res.empty?
+        token = res.first
+      end
+      write_attribute('token', token)
     end
     
     # Stores the text alert message you want to send to the device.
@@ -79,6 +92,11 @@ module APN
     def to_apple_json
       self.apple_hash.to_json
     end
+    
+    # Returns the hexadecimal representation of the device's token.
+    def token_to_hexa(token)
+      [token.delete(' ')].pack('H*')
+    end
 
     # Creates the binary message needed to send to Apple.
     # see http://developer.apple.com/IPhone/library/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingWIthAPS/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW4
@@ -86,8 +104,7 @@ module APN
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
       
-      token = self.device.to_hexa
-      "\0\0 #{token}\0#{json.length.chr}#{json}"
+      "\0\0 #{self.token_to_hexa(self.device_token)}\0#{json.length.chr}#{json}"
     end
     
     # Deliver the current notification
