@@ -6,6 +6,7 @@ module APN
     include ::ActionView::Helpers::TextHelper
 
     field :sound
+    field :token_str
     field :alert, :size => 150
     field :badge, :type => Integer
     field :payload, :type => Hash
@@ -13,7 +14,7 @@ module APN
     field :device_language
     field :errors_nb
     
-    belongs_to :device, :class_name => 'APN::Device'
+    #belongs_to :device, :class_name => 'APN::Device'
     before_save :truncate_alert
     
     # Create a notification with the given parameters.
@@ -28,7 +29,8 @@ module APN
     #
     def self.create_notification(device, alert, sound="default", badge=0)
       n = APN::Notification.new
-      n.device = device
+      #n.device = device
+      n.token_str = device.to_hexa
       n.alert = alert
       n.sound = sound
       n.badge = badge
@@ -86,8 +88,8 @@ module APN
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
       
-      token = self.device.to_hexa
-      "\0\0 #{token}\0#{json.length.chr}#{json}"
+      #token = self.device.to_hexa
+      "\0\0 #{self.token_str}\0#{json.length.chr}#{json}"
     end
     
     # Deliver the current notification
